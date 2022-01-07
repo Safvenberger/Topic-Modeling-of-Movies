@@ -544,7 +544,7 @@ if __name__ == "__main__":
     # Clean and group genres    
     df = group_genre(clean_genre(df))
     
-    # df.to_csv("df_clean.csv", index=False)
+    # df.to_csv("Data/df_clean.csv", index=False)
     
     # Pre-process the synopses
     docs = process_text(df)
