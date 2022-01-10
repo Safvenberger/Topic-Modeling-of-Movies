@@ -154,7 +154,7 @@ class lda_model:
         """
         try: 
             # Attempt to load the model if one already exists
-            model = LdaModel.load(f"Models/gensim/model{self.nr_topics}_{self.nr_passes}pass")
+            model = LdaModel.load(f"../Models/gensim/model{self.nr_topics}_{self.nr_passes}pass")
             
         except FileNotFoundError:
             # Create the dictionary, corpus and id2word
@@ -175,7 +175,7 @@ class lda_model:
                 )
             
             # Save the resulting model
-            model.save(f"Models/gensim/model{self.nr_topics}_{self.nr_passes}pass")
+            model.save(f"../Models/gensim/model{self.nr_topics}_{self.nr_passes}pass")
             
             # Shutdown the logging file
             logging.shutdown()
@@ -204,7 +204,7 @@ class lda_model:
         """
         try:
             # Try reading the file
-            predicted_probs = pd.read_csv(f"Output/gensim/lda{self.nr_topics}_df.csv")
+            predicted_probs = pd.read_csv(f"../Output/gensim/lda{self.nr_topics}_df.csv")
         except FileNotFoundError:
             # Preprocess the documents to work with the model
             test_docs_lda = self._create_lda_documents(X_test)
@@ -219,7 +219,7 @@ class lda_model:
             predicted_probs = self._convert_lda_to_df(model_preds, self.nr_topics)
             
             # Save to csv if it does not exist
-            predicted_probs.to_csv(f"Output/gensim/lda{self.nr_topics}_df.csv", index=False)
+            predicted_probs.to_csv(f"../Output/gensim/lda{self.nr_topics}_df.csv", index=False)
         
         return predicted_probs
     
@@ -243,15 +243,15 @@ class lda_model:
         """
         try: 
             # Try reading the files
-            model_probs = pd.read_csv(f"Output/gensim/model{self.nr_topics}_df.csv")
-            model_labels = pd.read_csv(f"Output/gensim/model{self.nr_topics}_labels.csv")
+            model_probs = pd.read_csv(f"../Output/gensim/model{self.nr_topics}_df.csv")
+            model_labels = pd.read_csv(f"../Output/gensim/model{self.nr_topics}_labels.csv")
         except FileNotFoundError:
             # Convert the estimated probabilites for each topics (which may not)
             # include all topics to a data frame with all topics included
             model_probs = self._convert_lda_to_df([doc for doc in self.model.get_document_topics(self.corpus)], 
                                                   nr_topics=self.nr_topics)
             # If file doesn't exist: create it
-            model_probs.to_csv(f"Output/gensim/model{self.nr_topics}_df.csv", index=False)
+            model_probs.to_csv(f"../Output/gensim/model{self.nr_topics}_df.csv", index=False)
             
             # Classify the topics by the maximum probability and calculate the
             # size of each combination of Class (truth) and Topic (predicted argmax)
@@ -260,7 +260,7 @@ class lda_model:
                     size().reset_index().rename(columns={0: "Frequency"})
                     
             # If file doesn't exist: create it
-            model_labels.to_csv(f"Output/gensim/model{self.nr_topics}_labels.csv", index=False)
+            model_labels.to_csv(f"../Output/gensim/model{self.nr_topics}_labels.csv", index=False)
 
         return model_labels
     
@@ -358,13 +358,13 @@ class BERT_model:
             # Attempt to read the files
             if y is None:
                 # Unsupervised model
-                topic_model = BERTopic.load(f"Models/BERTopic/unsup_bigram_model_auto{self.min_topic_size}")
-                topic_df = pd.read_csv(f"Output/BERTopic/unsup_bigram_topics_auto{self.min_topic_size}.csv")
+                topic_model = BERTopic.load(f"../Models/BERTopic/unsup_bigram_model_auto{self.min_topic_size}")
+                topic_df = pd.read_csv(f"../Output/BERTopic/unsup_bigram_topics_auto{self.min_topic_size}.csv")
 
             else: 
                 # Supervised model
-                topic_model = BERTopic.load(f"Models/BERTopic/sup_bigram_model_auto{self.min_topic_size}")
-                topic_df = pd.read_csv(f"Output/BERTopic/sup_bigram_topics_auto{self.min_topic_size}.csv")
+                topic_model = BERTopic.load(f"../Models/BERTopic/sup_bigram_model_auto{self.min_topic_size}")
+                topic_df = pd.read_csv(f"../Output/BERTopic/sup_bigram_topics_auto{self.min_topic_size}.csv")
 
             # Split to corresponding entries
             topics = np.array(topic_df["topic"])
@@ -378,15 +378,15 @@ class BERT_model:
             if y is None:
                 # Unsupervised model
                 topics, probs = self.topic_model.fit_transform(X)
-                self.topic_model.save(f"Models/BERTopic/unsup_bigram_model_auto{self.min_topic_size}")
+                self.topic_model.save(f"../Models/BERTopic/unsup_bigram_model_auto{self.min_topic_size}")
                 pd.DataFrame(probs).assign(topic=topics).\
-                    to_csv(f"Output/BERTopic/unsup_bigram_topics_auto{self.min_topic_size}.csv", index=False) 
+                    to_csv(f"../Output/BERTopic/unsup_bigram_topics_auto{self.min_topic_size}.csv", index=False) 
             else:
                 # Supervised
                 topics, probs = self.topic_model.fit_transform(X, y=y)
-                self.topic_model.save(f"Models/BERTopic/sup_bigram_model_auto{self.min_topic_size}")
+                self.topic_model.save(f"../Models/BERTopic/sup_bigram_model_auto{self.min_topic_size}")
                 pd.DataFrame(probs).assign(topic=topics).\
-                    to_csv(f"Output/BERTopic/sup_bigram_topics_auto{self.min_topic_size}.csv", index=False) 
+                    to_csv(f"../Output/BERTopic/sup_bigram_topics_auto{self.min_topic_size}.csv", index=False) 
         
         # Save topics and probabilites
         self.topics = topics
@@ -451,10 +451,10 @@ class BERT_model:
         """
         try: 
             # Attempt to read the file.
-            topics_class = pd.read_csv(f"Output/BERTopic/topic{self.min_topic_size}class_{self.model_name}.csv")
+            topics_class = pd.read_csv(f"../Output/BERTopic/topic{self.min_topic_size}class_{self.model_name}.csv")
         except FileNotFoundError:
             topics_class = self.topic_model.topics_per_class(X, self.topics, y)
-            topics_class.to_csv(f"Output/BERTopic/topic{self.min_topic_size}class_{self.model_name}.csv")
+            topics_class.to_csv(f"../Output/BERTopic/topic{self.min_topic_size}class_{self.model_name}.csv")
         
         return topics_class
 
@@ -476,13 +476,13 @@ class BERT_model:
         """
         try:
             # Attempt to read the file.
-            model_preds_df = pd.read_csv(f"Output/BERTopic/topic{self.min_topic_size}preds_{self.model_name}.csv")
+            model_preds_df = pd.read_csv(f"../Output/BERTopic/topic{self.min_topic_size}preds_{self.model_name}.csv")
         except FileNotFoundError:
             # Predict for the new documents.
             model_preds = self.topic_model.transform(X_test)
             # Convert to data frame and save the file
             model_preds_df = pd.DataFrame(model_preds[1]).assign(topics=model_preds[0])
-            model_preds_df.to_csv(f"Output/BERTopic/topic{self.min_topic_size}preds_{self.model_name}.csv")
+            model_preds_df.to_csv(f"../Output/BERTopic/topic{self.min_topic_size}preds_{self.model_name}.csv")
         
         return model_preds_df
                
@@ -508,7 +508,7 @@ class BERT_model:
             The coherence score for the generated topics.
 
         """
-        tpc = pd.read_csv(f"Output/BERTopic/{self.model_name}_bigram_topics_auto{self.min_topic_size}.csv").iloc[:, -1]
+        tpc = pd.read_csv(f"../Output/BERTopic/{self.model_name}_bigram_topics_auto{self.min_topic_size}.csv").iloc[:, -1]
     
         # Preprocess Documents
         bert_documents = pd.DataFrame({"Document": X,
@@ -539,12 +539,12 @@ class BERT_model:
     
 if __name__ == "__main__":
     # Read data
-    df = pd.read_csv("Data/wiki_movie_plots.csv")
+    df = pd.read_csv("../Data/wiki_movie_plots.csv")
 
     # Clean and group genres    
     df = group_genre(clean_genre(df))
     
-    # df.to_csv("Data/df_clean.csv", index=False)
+    # df.to_csv("../Data/df_clean.csv", index=False)
     
     # Pre-process the synopses
     docs = process_text(df)

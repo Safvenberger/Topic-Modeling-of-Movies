@@ -12,4 +12,5 @@ Wikipedia movie plots: https://www.kaggle.com/jrobischon/wikipedia-movie-plots
   - Pre-trained BERT model: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 ## Notes
+The main script is models.py and it should be run from the "Scripts" folder.
 The models and their output are not uploaded due to size limitations.

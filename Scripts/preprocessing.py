@@ -58,7 +58,7 @@ def process_text(df):
     """
     try:
         # Load file if it exists
-        docs = pd.read_csv("Data/processed.csv")
+        docs = pd.read_csv("../Data/processed.csv")
     except FileNotFoundError:
         # Remove sources as given by [\d].
         df["Plot"] = df["Plot"].apply(lambda x: re.sub("(?<=\[)\d+(?=\])|\[|\]", "", x))
@@ -70,7 +70,7 @@ def process_text(df):
         docs = df["Plot"].apply(lambda x: preprocess(x))
         
         # Save as csv file for faster loading
-        docs.to_csv("Data/processed.csv", index=False)
+        docs.to_csv("../Data/processed.csv", index=False)
 
     return docs
 
